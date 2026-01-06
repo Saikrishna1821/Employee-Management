@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./sidebar";
+import { ModeToggle } from "./mode";
 
 // Menu items.
 const items = [
@@ -46,6 +47,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Employee Management Portal</SidebarGroupLabel>
+          <ModeToggle />
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

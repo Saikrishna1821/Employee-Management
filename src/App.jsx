@@ -6,37 +6,40 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Employees from "./pages/Employees";
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/ui/app-sidebar";
+import { ThemeProvider } from "./components/ui/Themeprovider";
 function App({ children }) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full">
-        <SidebarTrigger />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <SidebarProvider>
+        <AppSidebar />
+        <main className="w-full">
+          <SidebarTrigger />
 
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/employees"
-              element={
-                <ProtectedRoute>
-                  <Employees />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-        {children}
-      </main>
-    </SidebarProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employees"
+                element={
+                  <ProtectedRoute>
+                    <Employees />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+          {children}
+        </main>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 
