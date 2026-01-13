@@ -1,7 +1,10 @@
 import { useDashboard } from "@/api/employee.api";
 import React from "react";
+import { Outlet } from "react-router-dom";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const { data } = useDashboard();
   console.log("daed", data);
   const employees = [
@@ -39,4 +42,14 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export const DashboardLayout=()=> {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        <SidebarTrigger />
+        <Outlet />
+      </main>
+    </SidebarProvider>
+  );
+}

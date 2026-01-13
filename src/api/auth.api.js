@@ -1,6 +1,7 @@
 import { setToken } from "@/auth/auth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "./axios";
+import { queryClient } from "@/query/client";
 
 const loginApi = async (payload) => {
   const response = await api.post("/auth/login", payload);
@@ -15,3 +16,4 @@ export const useLogin = () => {
     },
   });
 };
+

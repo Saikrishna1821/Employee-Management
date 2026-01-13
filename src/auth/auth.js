@@ -1,3 +1,5 @@
+import { queryClient } from "@/query/client";
+
 const TOKEN_KEY = "auth_token";
 
 export const getToken = () => {
@@ -14,4 +16,11 @@ export const removeToken = () => {
 
 export const isAuthenticated = () => {
   return Boolean(getToken());
+};
+export const logout = () => {
+  queryClient.clear();
+  removeToken();
+  localStorage.clear();
+
+  window.location.href="/login"
 };

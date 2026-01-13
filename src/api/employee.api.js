@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./axios";
 import { queryClient } from "@/query/client";
 import { formatDate } from "@/constants/helper";
@@ -34,11 +34,13 @@ export const useCreateEmployee = () => {
 };
 
 export const updateEmployeeApi = (data) => {
-  const { id, ...rest } = data;
-  return api.put(`/employee/update/${id}`, rest);
+    const id = data.get("id"); // ✅ correct way
+  console.log("rest",data)
+  return api.put(`/employee/update/${id}`, data);
 };
 
 export const useUpdateEmployee = () => {
+
   return useMutation({
     mutationFn: updateEmployeeApi,
     onSuccess: () => {

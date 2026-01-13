@@ -1,44 +1,32 @@
-import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login.jsx";
-import ProtectedRoute from "./routes/ProtectedRoute.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import { Dashboard, DashboardLayout } from "./pages/Dashboard";
 import Employees from "./pages/Employees";
-import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
-import { AppSidebar } from "./components/ui/app-sidebar";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import { ThemeProvider } from "./components/ui/Themeprovider";
-function App({ children }) {
+
+function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <SidebarProvider>
-        <AppSidebar />
-        <main className="w-full">
-          <SidebarTrigger />
+      <BrowserRouter>
+        <Routes>
+          {/* Public route */}
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/employees"
-                element={
-                  <ProtectedRoute>
-                    <Employees />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
-          {children}
-        </main>
-      </SidebarProvider>
+          {/* Protected routes with sidebar */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/employees" element={<Employees />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

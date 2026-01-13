@@ -45,6 +45,8 @@ const Employees = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const filteredEmployees = data?.filter((emp) => {
     const matchByName = emp.full_name
       .toLowerCase()
@@ -77,28 +79,30 @@ const Employees = () => {
     setEmployeeToDelete(null);
   };
   const handleSave = (data) => {
+    // 🔹 UPDATE
     if (selectedEmployee) {
-      console.log(data);
-      updateEmployee.mutate(data, {
+      console.log("selected", selectedEmployee);
+      updateEmployee.mutateAsync(data, {
         onSuccess: () => {
           toast.success(
-            `${selectedEmployee.full_name} details have been successfully updated`
+            `${selectedEmployee.full_name} details have been updated successfully `
           );
+          setOpen(false);
         },
-        onError: (e) => toast.error("Something went wrong!"),
-      });
-    } else {
-      createEmployee.mutate(data, {
-        onSuccess: () => {
-          toast("success", "Employee has been successfully added");
-        },
-        onError: (error) => {
-          console.log("E", error);
-        },
+        onError: () => toast.error("Something went wrong!"),
       });
     }
-
-    setOpen(false);
+    // 🔹 CREATE
+    else {
+      toast.promise(createEmployee.mutateAsync(data), {
+        loading: "Adding employee...",
+        success: () => {
+          setOpen(false);
+          return "Employee added successfully";
+        },
+        error: (e) => (e?.message ? e.message : "Failed to Add"),
+      });
+    }
   };
 
   if (isLoading) {
@@ -115,7 +119,11 @@ const Employees = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Employees</h1>
 
-        <Button className="print:hidden" variant="secondary" onClick={() => window.print()}>
+        <Button
+          className="print:hidden"
+          variant="secondary"
+          onClick={() => window.print()}
+        >
           Print
         </Button>
       </div>
@@ -181,9 +189,10 @@ const Employees = () => {
                 <TableRow key={emp.id}>
                   <TableCell>
                     <img
-                      src={emp.profile_image || fallback}
+                      src={emp?.image_url ? emp.image_url : fallback}
                       alt="Preview"
                       className="h-8 w-8 rounded-full"
+                      lazy
                     />
                   </TableCell>
                   <TableCell>{emp.employee_code}</TableCell>
@@ -219,8 +228,6 @@ const Employees = () => {
                     >
                       Delete
                     </Button>
-
-                  
                   </TableCell>
                 </TableRow>
               ))

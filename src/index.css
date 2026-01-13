@@ -82,3 +82,10 @@
     @apply bg-background text-foreground;
   }
 }
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}

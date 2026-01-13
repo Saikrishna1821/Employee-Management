@@ -11,8 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TELANGANA_DISTRICTS } from "@/constants/helper";
+import { formatDate, TELANGANA_DISTRICTS } from "@/constants/helper";
 function EmployeeForm({ initialData, onSubmit }) {
+  const [id, setId] = useState(null);
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [email, setEmail] = useState("");
@@ -22,16 +23,18 @@ function EmployeeForm({ initialData, onSubmit }) {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     if (initialData) {
+      setId(initialData.id || null);
       setEmail(initialData.email || "");
       setName(initialData.full_name || "");
       setGender(initialData.gender || "");
       setDob(initialData.dob || "");
       setState(initialData.state || "");
       setActive(initialData.is_active ?? true);
-      setPreview(initialData.profile_url || null);
+      setPreview(initialData.image_url || null);
     }
   }, [initialData]);
   const handleImageChange = (e) => {
@@ -42,23 +45,27 @@ function EmployeeForm({ initialData, onSubmit }) {
     setPreview(URL.createObjectURL(file));
   };
   const handleSubmit = () => {
-    // if (!name || !gender || !dob || !state) {
-    //   setError("All fields are required");
-    //   return;
-    // }
+    if (!name || !gender || !dob || !state || !email) {
+      setError("All fields are required");
+      return;
+    }
 
-    // setError("");
+    setError("");
 
-    onSubmit({
-      id: initialData?.id,
-      email,
-      name,
-      gender,
-      dob,
-      state,
-      active,
-      image,
-    });
+    const formData = new FormData();
+    formData.append("id",id);
+    formData.append("email", email);
+    formData.append("name", name);
+    formData.append("gender", gender);
+    formData.append("dob", dob);
+    formData.append("state", state);
+    formData.append("active", active);
+
+    if (image) {
+      formData.append("image", image); // File object
+    }
+
+    onSubmit(formData);
   };
 
   return (
@@ -68,6 +75,7 @@ function EmployeeForm({ initialData, onSubmit }) {
           src={preview || fallback}
           alt="Preview"
           className="h-40 w-40 rounded-full"
+          lazy
         />
       </div>
 
@@ -92,8 +100,6 @@ function EmployeeForm({ initialData, onSubmit }) {
         </SelectContent>
       </Select>
 
-      <Input type="date"  value={dob} onChange={(e) => setDob(e.target.value)} />
-
       <Select value={state} onValueChange={setState}>
         <SelectTrigger className="md:w-100">
           <SelectValue placeholder="Select State" />
@@ -106,13 +112,20 @@ function EmployeeForm({ initialData, onSubmit }) {
           ))}
         </SelectContent>
       </Select>
-      <div>
-        <Input type="file" onChange={handleImageChange} />
+      <div className="flex items-center justify-between">
+        <Input
+          type="date"
+          className="w-min"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
+        />
+
+        <span>Activate or InActivate? </span>
+        <Switch checked={active} onCheckedChange={setActive} />
       </div>
 
-      <div className="flex items-center justify-between">
-        <span>Do you want to make this employee active or inactive? </span>
-        <Switch checked={active} onCheckedChange={setActive} />
+      <div>
+        <Input type="file" onChange={handleImageChange} />
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
