@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Login = () => {
       return;
     }
     setError("");
+
     login.mutate(
       { email, password },
       {
@@ -24,7 +26,7 @@ const Login = () => {
           console.log("loggedin successfully");
           navigate("/dashboard");
         },
-        onError: (e) => console.log(e),
+        onError: (e) =>toast.error(e.message),
       }
     );
   };

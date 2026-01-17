@@ -25,22 +25,8 @@ const items = [
     title: "Employees",
     url: "/employees",
     icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  }
+
 ];
 
 export function AppSidebar() {
