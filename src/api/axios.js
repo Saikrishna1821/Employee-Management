@@ -2,11 +2,12 @@ import { getToken } from "@/auth/auth";
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`,
   timeout: 10000,
 });
 
-
+console.log(import.meta.env.VITE_BACKEND_URL);
+console.log(api);
 api.interceptors.request.use((config) => {
   const token = getToken();
 
@@ -34,5 +35,5 @@ api.interceptors.response.use(
     };
 
     return Promise.reject(normalizedError);
-  }
+  },
 );
