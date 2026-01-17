@@ -81,7 +81,6 @@ const Employees = () => {
   const handleSave = (data) => {
     // 🔹 UPDATE
     if (selectedEmployee) {
-      console.log("selected", selectedEmployee);
       updateEmployee.mutateAsync(data, {
         onSuccess: () => {
           toast.success(

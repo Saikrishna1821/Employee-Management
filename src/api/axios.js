@@ -6,7 +6,6 @@ export const api = axios.create({
   timeout: 10000,
 });
 
-console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
 
 api.interceptors.request.use((config) => {
   const token = getToken();

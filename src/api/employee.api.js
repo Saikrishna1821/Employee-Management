@@ -34,8 +34,7 @@ export const useCreateEmployee = () => {
 };
 
 export const updateEmployeeApi = (data) => {
-    const id = data.get("id"); // ✅ correct way
-  console.log("rest",data)
+    const id = data.get("id"); 
   return api.put(`/employee/update/${id}`, data);
 };
 
